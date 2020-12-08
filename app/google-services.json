@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "107423887422",
+    "firebase_url": "https://morpion-mobile.firebaseio.com",
+    "project_id": "morpion-mobile",
+    "storage_bucket": "morpion-mobile.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:107423887422:android:c5f0bf6c1161b12ca1a16f",
+        "android_client_info": {
+          "package_name": "com.example.jeumorpion"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "107423887422-6dhtc4eee7h3j21msqu88ip645kab65u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDI75sDdpEKWkoB__QDmABOEWP-D3U9rSU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "107423887422-6dhtc4eee7h3j21msqu88ip645kab65u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
