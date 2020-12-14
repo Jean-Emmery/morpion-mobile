@@ -1,34 +1,33 @@
 {
   "project_info": {
-    "project_number": "107423887422",
-    "firebase_url": "https://morpion-mobile.firebaseio.com",
-    "project_id": "morpion-mobile",
-    "storage_bucket": "morpion-mobile.appspot.com"
+    "project_number": "1012796429000",
+    "project_id": "multimorpion",
+    "storage_bucket": "multimorpion.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:107423887422:android:c5f0bf6c1161b12ca1a16f",
+        "mobilesdk_app_id": "1:1012796429000:android:bcbd2b9e12a2702bcacbfd",
         "android_client_info": {
-          "package_name": "com.example.jeumorpion"
+          "package_name": "com.example.multimorpion"
         }
       },
       "oauth_client": [
         {
-          "client_id": "107423887422-6dhtc4eee7h3j21msqu88ip645kab65u.apps.googleusercontent.com",
+          "client_id": "1012796429000-103a65dv2da3ec1c9tf69egqmietd6m6.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDI75sDdpEKWkoB__QDmABOEWP-D3U9rSU"
+          "current_key": "AIzaSyBzy-qb_dxc_K4OKLogvtblIl8Z-F5VqFs"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "107423887422-6dhtc4eee7h3j21msqu88ip645kab65u.apps.googleusercontent.com",
+              "client_id": "1012796429000-103a65dv2da3ec1c9tf69egqmietd6m6.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
