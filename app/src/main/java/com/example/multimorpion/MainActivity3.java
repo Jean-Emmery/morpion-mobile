@@ -3,8 +3,10 @@ package com.example.multimorpion;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +19,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity3 extends AppCompatActivity {
+
+    boolean gameOver = false;
+    ValueEventListener buffer;
 
     Button button;
     Button button2;
@@ -33,6 +38,8 @@ public class MainActivity3 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main3);
+
+        gameOver = false;
 
         button = findViewById(R.id.button);
         button.setEnabled(false);
@@ -67,14 +74,21 @@ public class MainActivity3 extends AppCompatActivity {
             }
         });
 
+        button2.setEnabled(false);
+        button2.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                button2.setEnabled(true);
+            }
+        }, 1000);
+
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("MAINACTIVITY3", "onClick: setting message to EXIT");
-                message = "EXIT";
-                messageRef.setValue(message);
-                Log.d("MAINACTIVITY3", "onClick: finish()");
-                MainActivity3.this.finish();
+
+                messageRef.removeEventListener(buffer);
+                messageRef.setValue("EXIT");
+                addRoomEventListener();
             }
         });
 
@@ -88,23 +102,38 @@ public class MainActivity3 extends AppCompatActivity {
 
     }
 
+    private void waiting() {
+        ;
+    }
+
     private void addRoomEventListener() {
-        messageRef.addValueEventListener(new ValueEventListener() {
+        messageRef.addValueEventListener(buffer = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.getValue(String.class).contains("EXIT") && role.equals("O")) {
-                    finish();
-                }
-                //message received
-                if (role.equals("X") && !(snapshot.getValue(String.class).contains("EXIT"))) {
-                    if (snapshot.getValue(String.class).contains("O:")) {
-                        button.setEnabled(true);
-                        Toast.makeText(MainActivity3.this, "" + snapshot.getValue(String.class).replace("O:", ""), Toast.LENGTH_SHORT).show();
+                if (!gameOver) {
+                    if (snapshot.getValue(String.class).contains("EXIT") && role.equals("O")) {
+                        gameOver = true;
+                        messageRef.setValue("EXITED");
+                        startActivity(new Intent(getApplicationContext(), MainActivity2.class));
+                        MainActivity3.this.finish();
+                        Toast.makeText(MainActivity3.this, "YOU WON !", Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    if (snapshot.getValue(String.class).contains("X:")) {
-                        button.setEnabled(true);
-                        Toast.makeText(MainActivity3.this, "" + snapshot.getValue(String.class).replace("X:", ""), Toast.LENGTH_SHORT).show();
+                    if (snapshot.getValue(String.class).contains("EXITED")) {
+                        gameOver = true;
+                        startActivity(new Intent(getApplicationContext(), MainActivity2.class));
+                        MainActivity3.this.finish();
+                    }
+                    //message received
+                    if (role.equals("X")) {
+                        if (snapshot.getValue(String.class).contains("O:")) {
+                            button.setEnabled(true);
+                            Toast.makeText(MainActivity3.this, "" + snapshot.getValue(String.class).replace("O:", ""), Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        if (snapshot.getValue(String.class).contains("X:")) {
+                            button.setEnabled(true);
+                            Toast.makeText(MainActivity3.this, "" + snapshot.getValue(String.class).replace("X:", ""), Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
             }

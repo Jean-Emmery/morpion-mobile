@@ -37,8 +37,11 @@ public class MainActivity2 extends AppCompatActivity {
     DatabaseReference roomRef;
     DatabaseReference roomsRef;
 
+    ValueEventListener buffer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("MainActivity2", "onCreate: eheh");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
@@ -87,11 +90,13 @@ public class MainActivity2 extends AppCompatActivity {
     }
 
     private void addRoomEventListener() {
-        roomRef.addValueEventListener(new ValueEventListener() {
+        roomRef.addValueEventListener(buffer = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Log.d("MainActivity2", "onDataChange: ahah");
                 button.setText("CREATE ROOM");
                 button.setEnabled(true);
+                roomRef.removeEventListener(buffer);
                 Intent intent = new Intent(getApplicationContext(), MainActivity3.class);
                 intent.putExtra("roomName", roomName);
                 startActivity(intent);
