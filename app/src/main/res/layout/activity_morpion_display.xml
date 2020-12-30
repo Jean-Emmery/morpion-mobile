@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:gravity="center">
+
+
+    <Button
+        android:id="@+id/bt1"
+        android:layout_width="@dimen/size_button"
+        android:layout_height="@dimen/size_button" />
+
+    <Button
+        android:id="@+id/bt2"
+        android:layout_width="@dimen/size_button"
+        android:layout_height="@dimen/size_button"
+        android:layout_toRightOf="@+id/line1"/>
+
+    <Button
+        android:id="@+id/bt3"
+        android:layout_width="@dimen/size_button"
+        android:layout_height="@dimen/size_button"
+        android:layout_toRightOf="@+id/line2"/>
+
+    <Button
+        android:id="@+id/bt4"
+        android:layout_width="@dimen/size_button"
+        android:layout_height="@dimen/size_button"
+        android:layout_below="@+id/line3"/>
+
+    <Button
+        android:id="@+id/bt5"
+        android:layout_width="@dimen/size_button"
+        android:layout_height="@dimen/size_button"
+        android:layout_below="@+id/line3"
+        android:layout_toRightOf="@id/line1"/>
+
+    <Button
+        android:id="@+id/bt6"
+        android:layout_width="@dimen/size_button"
+        android:layout_height="@dimen/size_button"
+        android:layout_below="@+id/line3"
+        android:layout_marginLeft="2dp"
+        android:layout_marginTop="0dp"
+        android:layout_toRightOf="@id/line2" />
+
+    <Button
+        android:id="@+id/bt7"
+        android:layout_width="@dimen/size_button"
+        android:layout_height="@dimen/size_button"
+        android:layout_below="@+id/line4"/>
+
+    <Button
+        android:id="@+id/bt8"
+        android:layout_width="@dimen/size_button"
+        android:layout_height="@dimen/size_button"
+        android:layout_below="@+id/line4"
+        android:layout_toRightOf="@id/line1"/>
+
+    <Button
+        android:id="@+id/bt9"
+        android:layout_width="@dimen/size_button"
+        android:layout_height="@dimen/size_button"
+        android:layout_below="@+id/line4"
+        android:layout_toRightOf="@id/line2"/>
+
+
+    <View
+        android:id="@+id/line1"
+        android:layout_width="@dimen/width_line"
+        android:layout_height="0dp"
+        android:background="@android:color/black"
+        android:layout_alignTop="@id/bt1"
+        android:layout_alignBottom="@id/bt7"
+        android:layout_toRightOf="@+id/bt1"/>
+
+    <View
+        android:id="@+id/line2"
+        android:layout_width="@dimen/width_line"
+        android:layout_height="0dp"
+        android:background="@android:color/black"
+        android:layout_alignTop="@id/bt1"
+        android:layout_alignBottom="@id/bt7"
+        android:layout_toRightOf="@+id/bt2"/>
+
+    <View
+        android:id="@+id/line3"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/width_line"
+        android:background="@android:color/black"
+        android:layout_alignLeft="@id/bt1"
+        android:layout_alignRight="@id/bt3"
+        android:layout_below="@+id/bt1"/>
+
+    <View
+        android:id="@+id/line4"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/width_line"
+        android:background="@android:color/black"
+        android:layout_alignLeft="@id/bt1"
+        android:layout_alignRight="@id/bt3"
+        android:layout_below="@+id/bt4"/>
+
+    <TextView
+        android:id="@+id/auTourDe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/bt7"
+        android:layout_marginTop="@dimen/margin_tv"
+        android:text="Au tour du joueur : "/>
+
+    <TextView
+        android:id="@+id/joueur"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/bt7"
+        android:layout_marginTop="@dimen/margin_tv"
+        android:text="X"
+        android:layout_toRightOf="@id/auTourDe"/>
+
+
+</RelativeLayout>

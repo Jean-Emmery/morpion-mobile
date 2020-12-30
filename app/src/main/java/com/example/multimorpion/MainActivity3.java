@@ -21,6 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 public class MainActivity3 extends AppCompatActivity {
 
     boolean gameOver = false;
+    boolean soloPlayer = true;
     ValueEventListener buffer;
 
     Button button;
@@ -40,6 +41,7 @@ public class MainActivity3 extends AppCompatActivity {
         setContentView(R.layout.activity_main3);
 
         gameOver = false;
+        soloPlayer = true;
 
         button = findViewById(R.id.button);
         button.setEnabled(false);
@@ -71,6 +73,8 @@ public class MainActivity3 extends AppCompatActivity {
                 button.setEnabled(false);
                 message = role + ":Poked!";
                 messageRef.setValue(message);
+                startActivity(new Intent(getApplicationContext(), MainActivity4.class));
+                MainActivity3.this.finish();
             }
         });
 
@@ -85,7 +89,13 @@ public class MainActivity3 extends AppCompatActivity {
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (soloPlayer) {
+                    messageRef.removeEventListener(buffer);
+                    gameOver = true;
+                    messageRef.setValue("EXITED");
+                    startActivity(new Intent(getApplicationContext(), MainActivity2.class));
+                    MainActivity3.this.finish();
+                }
                 messageRef.removeEventListener(buffer);
                 messageRef.setValue("EXIT");
                 addRoomEventListener();
@@ -122,17 +132,20 @@ public class MainActivity3 extends AppCompatActivity {
                         gameOver = true;
                         startActivity(new Intent(getApplicationContext(), MainActivity2.class));
                         MainActivity3.this.finish();
+                        Toast.makeText(MainActivity3.this, "YOU LOST !", Toast.LENGTH_SHORT).show();
+
                     }
                     //message received
                     if (role.equals("X")) {
                         if (snapshot.getValue(String.class).contains("O:")) {
                             button.setEnabled(true);
-                            Toast.makeText(MainActivity3.this, "" + snapshot.getValue(String.class).replace("O:", ""), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity3.this, "" + snapshot.getValue(String.class).replace("O:", "fdp"), Toast.LENGTH_SHORT).show();
                         }
                     } else {
+                        soloPlayer = false;
                         if (snapshot.getValue(String.class).contains("X:")) {
                             button.setEnabled(true);
-                            Toast.makeText(MainActivity3.this, "" + snapshot.getValue(String.class).replace("X:", ""), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity3.this, "" + snapshot.getValue(String.class).replace("X:", "conar"), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
