@@ -8,5 +8,5 @@ Attribution joueur/salle
 Systeme de tour a tour
 
 RESTE:
-Intégrer la logique du jeu
+Transformer la logique solo en logique multijoueur
 Merger le code
