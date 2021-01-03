@@ -38,6 +38,7 @@ public class MainActivity2 extends AppCompatActivity {
     DatabaseReference roomsRef;
 
     ValueEventListener buffer;
+    ValueEventListener bufferRooms;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +114,7 @@ public class MainActivity2 extends AppCompatActivity {
 
     private void addRoomsEventListener() {
         roomsRef = database.getReference("rooms");
-        roomsRef.addValueEventListener(new ValueEventListener() {
+        roomsRef.addValueEventListener(bufferRooms = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //show list of rooms

@@ -79,8 +79,11 @@ public class MainActivity3 extends AppCompatActivity {
                 button.setEnabled(false);
                 message = role + ":Poked!";
                 messageRef.setValue(message);
+                messageRef.removeEventListener(buffer);
+                Log.d("MAINACT3", "onClick: removeEventlistener");
                 Intent intent = new Intent(getApplicationContext(), MainActivity4.class);
                 intent.putExtra("roomName", roomName);
+                Log.d("MAINACT3", "onClick: startactivity");
                 startActivity(intent);
             }
         });
@@ -99,7 +102,7 @@ public class MainActivity3 extends AppCompatActivity {
                 if (soloPlayer) {
                     messageRef.removeEventListener(buffer);
                     gameOver = true;
-                    startActivity(new Intent(getApplicationContext(), MainActivity2.class));
+                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     MainActivity3.this.finish();
                 }
                 messageRef.removeEventListener(buffer);
@@ -114,7 +117,6 @@ public class MainActivity3 extends AppCompatActivity {
         messageRef.setValue(message);
         Log.d("MAINACTIVITY3", "onCreate: 4");
         addRoomEventListener();
-        Log.d("MAINACTIVITY3", "onCreate: 5");
 
     }
 
@@ -130,6 +132,7 @@ public class MainActivity3 extends AppCompatActivity {
                     if (snapshot.getValue(String.class).contains("EXIT") && role.equals("O")) {
                         gameOver = true;
                         messageRef.setValue("EXITED");
+                        messageRef.removeEventListener(buffer);
                         startActivity(new Intent(getApplicationContext(), MainActivity2.class));
                         MainActivity3.this.finish();
                         Toast.makeText(MainActivity3.this, "YOU WON !", Toast.LENGTH_SHORT).show();
@@ -137,6 +140,7 @@ public class MainActivity3 extends AppCompatActivity {
                     if (snapshot.getValue(String.class).contains("EXITED")) {
                         gameOver = true;
                         messageRef.removeEventListener(buffer);
+                        Log.d("MAINACT3", "onDataChange: suppressing rooms");
                         FirebaseDatabase.getInstance().getReference().child("rooms/" + playerName).setValue(null);
                         startActivity(new Intent(getApplicationContext(), MainActivity2.class));
                         MainActivity3.this.finish();

@@ -32,9 +32,13 @@ public class MainActivity4 extends AppCompatActivity implements View.OnClickList
     String role = "";
     String message = "";
 
+    ValueEventListener buffer;
+
     FirebaseDatabase database;
     DatabaseReference messageRef;
     DatabaseReference roomRef;
+
+    boolean turn = false;
 
     //Tableau à deux dimensions
     //plateu[colonne][ligne]
@@ -42,6 +46,8 @@ public class MainActivity4 extends AppCompatActivity implements View.OnClickList
     //1 : X
     //2 : O
     private int plateau[][] = new int [3][3];
+    int plateauX;
+    int plateauY;
 
     // 1 : X
     // 2 : O
@@ -86,10 +92,10 @@ public class MainActivity4 extends AppCompatActivity implements View.OnClickList
             bt.setOnClickListener(this);
         }
 
-        Log.d("MAINACT4", "onCreate: test2");
+        Log.d("MAINACT4", "onCreate: firebase.getinstance");
         database = FirebaseDatabase.getInstance();
 
-        Log.d("MAINACT4", "onCreate: test3");
+        Log.d("MAINACT4", "gretshared preferences: test3");
         SharedPreferences preferences = getSharedPreferences("PREFS", 0);
         playerName = preferences.getString("playerName", "");
 
@@ -99,52 +105,80 @@ public class MainActivity4 extends AppCompatActivity implements View.OnClickList
             roomName = extras.getString("roomName");
             if (roomName.equals(playerName)) {
                 role = "X";
+                turn = true;
             } else {
                 role = "O";
+                turn = false;
             }
         }
-        Log.d("MAINACT4", "onCreate: test5");
+        Log.d("MAINACT4", "onCreate: test5, role = " + role);
+        messageRef = database.getReference("rooms/" + roomName + "/message");
         addRoomEventListener();
         Log.d("MAINACT4", "onCreate: test6");
     }
 
     @Override
     public void onClick(View v) {
+        Log.d("MAINACT3", "onClick: turn = " + turn);
 
+        if (!turn)
+            return;
+
+        Log.d("MA4", "onClick: view " + v);
         if (v.getBackground() != null)
             return;
 
         switch (v.getId()) {
             case R.id.bt1:
                 plateau [0][0] = joueurEnCours;
+                plateauX = 0;
+                plateauY = 0;
                 break;
             case R.id.bt2:
                 plateau [1][0] = joueurEnCours;
+                plateauX = 1;
+                plateauY = 0;
                 break;
             case R.id.bt3:
                 plateau [2][0] = joueurEnCours;
+                plateauX = 2;
+                plateauY = 0;
                 break;
             case R.id.bt4:
                 plateau [0][1] = joueurEnCours;
+                plateauX = 0;
+                plateauY = 1;
                 break;
             case R.id.bt5:
                 plateau [1][1] = joueurEnCours;
+                plateauX = 1;
+                plateauY = 1;
                 break;
             case R.id.bt6:
                 plateau [2][1] = joueurEnCours;
+                plateauX = 2;
+                plateauY = 1;
                 break;
             case R.id.bt7:
                 plateau [0][2] = joueurEnCours;
+                plateauX = 0;
+                plateauY = 2;
                 break;
             case R.id.bt8:
                 plateau [1][2] = joueurEnCours;
+                plateauX = 1;
+                plateauY = 2;
                 break;
             case R.id.bt9:
                 plateau [2][2] = joueurEnCours;
+                plateauX = 2;
+                plateauY = 2;
                 break;
             default:
                 return;
         }
+
+        //drawPlayer(plateauX, plateauY, joueurEnCours);
 
         Drawable drawableJoueur;
         if (joueurEnCours == 1)
@@ -154,22 +188,24 @@ public class MainActivity4 extends AppCompatActivity implements View.OnClickList
 
         v.setBackground(drawableJoueur);
 
-        if (joueurEnCours == 1) {
+        Log.d("MAINACT4", "onClick: plateau X Y: " +plateauX + plateauY);
+        if (joueurEnCours == 1) { //passe au joueur d'apres
             joueurEnCours = 2;
             tvJoueur.setText("O");
-            message = "O:PLAYED!";
+            message = plateauX + ":" + plateauY+":X";
             messageRef.setValue(message);
         }
         else {
             joueurEnCours = 1;
             tvJoueur.setText("X");
-            message = "X:PLAYED!";
+            message = plateauX + ":" + plateauY+":O";
             messageRef.setValue(message);
         }
 
 
         int res = checkWinner();
         displayAlertDialog(res);
+
     }
 
     // 0 : Partie non fini
@@ -256,20 +292,91 @@ public class MainActivity4 extends AppCompatActivity implements View.OnClickList
         }
     }
     private void addRoomEventListener() {
-        messageRef.addValueEventListener(new ValueEventListener() {
+        Log.d("MAINACT4", "addRoomEventListener: test 1, role = " + role);
+        messageRef.addValueEventListener(buffer = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.getValue(String.class).contains("EXIT") && role.equals("O")) {
-                    finish();
-                }
+                String snapbuf = snapshot.getValue(String.class);
+                Log.d("MA45", "onDataChange: snapbuf: " +snapbuf + " :role " + role);
                 //message received
-                if (role.equals("X")) {
-                    if (snapshot.getValue(String.class).contains("O:")) {
-                        Toast.makeText(MainActivity4.this, "" + snapshot.getValue(String.class).replace("O:", ""), Toast.LENGTH_SHORT).show();
+                if (role.equals("X")) { // UR PHONE
+                    if (snapbuf.contains(":O")) {
+                        turn = true;
+                        Log.d("MAINACT4", "onDataChange: string: " + snapshot.getValue(String.class));
+                        plateauX = snapbuf.charAt(0) - 48;
+                        plateauY = snapbuf.charAt(2) - 48;
+                        Log.d("MAINACT4", "onDataChange: plateau XY: " + plateauX + plateauY);
+
+                        Button buttonBuf = null;
+                        if (plateauX == 0) {
+                            if (plateauY == 0)
+                                buttonBuf = (Button) findViewById(R.id.bt1);
+                            else if (plateauY == 1)
+                                buttonBuf = (Button) findViewById(R.id.bt4);
+                            else
+                                buttonBuf = (Button) findViewById(R.id.bt7);
+                        } else if (plateauX == 1) {
+                            if (plateauY == 0)
+                                buttonBuf = (Button) findViewById(R.id.bt2);
+                            else if (plateauY == 1)
+                                buttonBuf = (Button) findViewById(R.id.bt5);
+                            else
+                                buttonBuf = (Button) findViewById(R.id.bt8);
+                        } else if (plateauX == 2){
+                            if (plateauY == 0)
+                                buttonBuf = (Button) findViewById(R.id.bt3);
+                            else if (plateauY == 1)
+                                buttonBuf = (Button) findViewById(R.id.bt6);
+                            else
+                                buttonBuf = (Button) findViewById(R.id.bt9);
+                        }
+                        buttonBuf.performClick();
+                        Toast.makeText(MainActivity4.this, "" + snapshot.getValue(String.class), Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    if (snapshot.getValue(String.class).contains("X:")) {
-                        Toast.makeText(MainActivity4.this, "" + snapshot.getValue(String.class).replace("X:", ""), Toast.LENGTH_SHORT).show();
+                    else
+                    {
+                        //other player phone
+                        turn = true;
+                    }
+                } else { // opponent phone
+                    if (snapbuf.contains(":X")) {
+                        turn = true;
+                        Log.d("MAINACT4", "onDataChange: string: " + snapshot.getValue(String.class));
+                        plateauX = snapbuf.charAt(0) - 48;
+                        plateauY = snapbuf.charAt(2) - 48;
+                        Log.d("MAINACT4", "onDataChange: plateau XY: " + plateauX + plateauY);
+
+                        Button buttonBuf = null;
+                        if (plateauX == 0) {
+                            if (plateauY == 0)
+                                buttonBuf = (Button) findViewById(R.id.bt1);
+                            else if (plateauY == 1)
+                                buttonBuf = (Button) findViewById(R.id.bt4);
+                            else
+                                buttonBuf = (Button) findViewById(R.id.bt7);
+                        } else if (plateauX == 1) {
+                            if (plateauY == 0)
+                                buttonBuf = (Button) findViewById(R.id.bt2);
+                            else if (plateauY == 1)
+                                buttonBuf = (Button) findViewById(R.id.bt5);
+                            else
+                                buttonBuf = (Button) findViewById(R.id.bt8);
+                        } else if (plateauX == 2){
+                            if (plateauY == 0)
+                                buttonBuf = (Button) findViewById(R.id.bt3);
+                            else if (plateauY == 1)
+                                buttonBuf = (Button) findViewById(R.id.bt6);
+                            else
+                                buttonBuf = (Button) findViewById(R.id.bt9);
+                        }
+                        buttonBuf.performClick();
+
+                        Toast.makeText(MainActivity4.this, "" + snapshot.getValue(String.class), Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        //other player phone other player turn
+                        turn = true;
+                        Toast.makeText(MainActivity4.this, "" + snapshot.getValue(String.class), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
