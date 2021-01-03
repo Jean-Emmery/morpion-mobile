@@ -135,7 +135,7 @@ public class MainActivity3 extends AppCompatActivity {
                         messageRef.removeEventListener(buffer);
                         startActivity(new Intent(getApplicationContext(), MainActivity2.class));
                         MainActivity3.this.finish();
-                        Toast.makeText(MainActivity3.this, "YOU WON !", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity3.this, "YOU LOSE !", Toast.LENGTH_SHORT).show();
                     }
                     if (snapshot.getValue(String.class).contains("EXITED")) {
                         gameOver = true;
@@ -144,7 +144,7 @@ public class MainActivity3 extends AppCompatActivity {
                         FirebaseDatabase.getInstance().getReference().child("rooms/" + playerName).setValue(null);
                         startActivity(new Intent(getApplicationContext(), MainActivity2.class));
                         MainActivity3.this.finish();
-                        Toast.makeText(MainActivity3.this, "YOU LOST !", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity3.this, "YOU WIN, opponent left !", Toast.LENGTH_SHORT).show();
 
                     }
                     //message received
@@ -161,6 +161,8 @@ public class MainActivity3 extends AppCompatActivity {
                         }
                     }
                 }
+                else
+                    Toast.makeText(MainActivity3.this, "YOU LOSE !", Toast.LENGTH_SHORT).show();
             }
 
             @Override

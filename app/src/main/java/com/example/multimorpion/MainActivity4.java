@@ -257,8 +257,9 @@ public class MainActivity4 extends AppCompatActivity implements View.OnClickList
 
         String strToDisplay = "";
 
-        if (res == 1)
+        if (res == 1) {
             strToDisplay = "Les X ont gagnées !";
+        }
 
         if (res == 2)
             strToDisplay = "Les O ont gagnées !";
@@ -297,10 +298,10 @@ public class MainActivity4 extends AppCompatActivity implements View.OnClickList
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String snapbuf = snapshot.getValue(String.class);
-                Log.d("MA45", "onDataChange: snapbuf: " +snapbuf + " :role " + role);
+                Log.d("MA45", "onDataChange: snapbuf: " +snapbuf + " :role " + role + " turn = " + turn);
                 //message received
                 if (role.equals("X")) { // UR PHONE
-                    if (snapbuf.contains(":O")) {
+                    if (snapbuf.contains(":O")) { //other player action
                         turn = true;
                         Log.d("MAINACT4", "onDataChange: string: " + snapshot.getValue(String.class));
                         plateauX = snapbuf.charAt(0) - 48;
@@ -331,14 +332,16 @@ public class MainActivity4 extends AppCompatActivity implements View.OnClickList
                                 buttonBuf = (Button) findViewById(R.id.bt9);
                         }
                         buttonBuf.performClick();
+
+                        turn = true;
                         Toast.makeText(MainActivity4.this, "" + snapshot.getValue(String.class), Toast.LENGTH_SHORT).show();
                     }
-                    else
+                    else if (snapbuf.contains(":X"))
                     {
-                        //other player phone
-                        turn = true;
+                        //ur action
+                        turn = false;
                     }
-                } else { // opponent phone
+                } else { // if role == "O"
                     if (snapbuf.contains(":X")) {
                         turn = true;
                         Log.d("MAINACT4", "onDataChange: string: " + snapshot.getValue(String.class));
@@ -373,9 +376,9 @@ public class MainActivity4 extends AppCompatActivity implements View.OnClickList
 
                         Toast.makeText(MainActivity4.this, "" + snapshot.getValue(String.class), Toast.LENGTH_SHORT).show();
                     }
-                    else {
+                    else if (snapbuf.contains(":O")){
                         //other player phone other player turn
-                        turn = true;
+                        turn = false;
                         Toast.makeText(MainActivity4.this, "" + snapshot.getValue(String.class), Toast.LENGTH_SHORT).show();
                     }
                 }

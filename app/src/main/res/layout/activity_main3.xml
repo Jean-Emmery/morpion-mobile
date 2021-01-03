@@ -16,10 +16,11 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
         android:clickable="false"
+        android:focusable="false"
         android:editable="false"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="0"
+        android:inputType="none"
+        android:text="O"
         android:textColor="#FF0000"
         android:textSize="100sp" />
 
@@ -34,9 +35,10 @@
         android:clickable="false"
         android:editable="false"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="none"
         android:text="X"
         android:textColor="#FF0000"
+        android:focusable="false"
         android:textSize="100sp" />
 
     <Button
@@ -65,9 +67,10 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:clickable="false"
+        android:focusable="false"
         android:editable="false"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="none"
         android:shadowColor="@color/white"
         android:text="VERSUS"
         android:textColor="@color/black"
