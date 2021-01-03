@@ -1,5 +1,6 @@
 package com.example.multimorpion;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AlertDialogLayout;
@@ -7,18 +8,33 @@ import androidx.appcompat.widget.DrawableUtils;
 import androidx.core.content.ContextCompat;
 
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 public class MainActivity4 extends AppCompatActivity implements View.OnClickListener {
+
+    String playerName = "";
+    String roomName = "";
+    String role = "";
+    String message = "";
+
+    FirebaseDatabase database;
+    DatabaseReference messageRef;
+    DatabaseReference roomRef;
 
     //Tableau à deux dimensions
     //plateu[colonne][ligne]
@@ -63,10 +79,33 @@ public class MainActivity4 extends AppCompatActivity implements View.OnClickList
         all_buttons.add(bt8);
         all_buttons.add(bt9);
 
+        Log.d("MAINACT4", "onCreate: test1");
+
         for (Button bt : all_buttons) {
             bt.setBackground(null);
             bt.setOnClickListener(this);
         }
+
+        Log.d("MAINACT4", "onCreate: test2");
+        database = FirebaseDatabase.getInstance();
+
+        Log.d("MAINACT4", "onCreate: test3");
+        SharedPreferences preferences = getSharedPreferences("PREFS", 0);
+        playerName = preferences.getString("playerName", "");
+
+        Log.d("MAINACT4", "onCreate: test4");
+        Bundle extras = getIntent().getExtras();
+        if(extras != null) {
+            roomName = extras.getString("roomName");
+            if (roomName.equals(playerName)) {
+                role = "X";
+            } else {
+                role = "O";
+            }
+        }
+        Log.d("MAINACT4", "onCreate: test5");
+        addRoomEventListener();
+        Log.d("MAINACT4", "onCreate: test6");
     }
 
     @Override
@@ -118,11 +157,16 @@ public class MainActivity4 extends AppCompatActivity implements View.OnClickList
         if (joueurEnCours == 1) {
             joueurEnCours = 2;
             tvJoueur.setText("O");
+            message = "O:PLAYED!";
+            messageRef.setValue(message);
         }
         else {
             joueurEnCours = 1;
             tvJoueur.setText("X");
+            message = "X:PLAYED!";
+            messageRef.setValue(message);
         }
+
 
         int res = checkWinner();
         displayAlertDialog(res);
@@ -210,5 +254,31 @@ public class MainActivity4 extends AppCompatActivity implements View.OnClickList
         for (Button bt : all_buttons)  {
             bt.setBackground(null);
         }
+    }
+    private void addRoomEventListener() {
+        messageRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.getValue(String.class).contains("EXIT") && role.equals("O")) {
+                    finish();
+                }
+                //message received
+                if (role.equals("X")) {
+                    if (snapshot.getValue(String.class).contains("O:")) {
+                        Toast.makeText(MainActivity4.this, "" + snapshot.getValue(String.class).replace("O:", ""), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    if (snapshot.getValue(String.class).contains("X:")) {
+                        Toast.makeText(MainActivity4.this, "" + snapshot.getValue(String.class).replace("X:", ""), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // error - retry
+                messageRef.setValue(message);
+            }
+        });
     }
 }

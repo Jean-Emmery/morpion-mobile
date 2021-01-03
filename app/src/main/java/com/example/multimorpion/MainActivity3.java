@@ -10,6 +10,8 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -34,6 +36,7 @@ public class MainActivity3 extends AppCompatActivity {
 
     FirebaseDatabase database;
     DatabaseReference messageRef;
+    DatabaseReference roomRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,7 @@ public class MainActivity3 extends AppCompatActivity {
         button.setEnabled(false);
 
         button2 = findViewById(R.id.button2);
+        button2.setEnabled(false);
 
         database = FirebaseDatabase.getInstance();
 
@@ -55,6 +59,7 @@ public class MainActivity3 extends AppCompatActivity {
 
         Log.v("MainActivity3", "onCreate: TEST");
         Log.v("MainActivity3", "playerName: " + playerName);
+
 
         Bundle extras = getIntent().getExtras();
         if(extras != null) {
@@ -66,6 +71,7 @@ public class MainActivity3 extends AppCompatActivity {
             }
         }
 
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,8 +79,9 @@ public class MainActivity3 extends AppCompatActivity {
                 button.setEnabled(false);
                 message = role + ":Poked!";
                 messageRef.setValue(message);
-                startActivity(new Intent(getApplicationContext(), MainActivity4.class));
-                MainActivity3.this.finish();
+                Intent intent = new Intent(getApplicationContext(), MainActivity4.class);
+                intent.putExtra("roomName", roomName);
+                startActivity(intent);
             }
         });
 
@@ -92,7 +99,6 @@ public class MainActivity3 extends AppCompatActivity {
                 if (soloPlayer) {
                     messageRef.removeEventListener(buffer);
                     gameOver = true;
-                    messageRef.setValue("EXITED");
                     startActivity(new Intent(getApplicationContext(), MainActivity2.class));
                     MainActivity3.this.finish();
                 }
@@ -104,7 +110,7 @@ public class MainActivity3 extends AppCompatActivity {
 
         //listen for incoming messages
         messageRef = database.getReference("rooms/" + roomName + "/message");
-        message = role  + ":Poked!";
+        message = role  + ":JOINED!";
         messageRef.setValue(message);
         Log.d("MAINACTIVITY3", "onCreate: 4");
         addRoomEventListener();
@@ -130,6 +136,8 @@ public class MainActivity3 extends AppCompatActivity {
                     }
                     if (snapshot.getValue(String.class).contains("EXITED")) {
                         gameOver = true;
+                        messageRef.removeEventListener(buffer);
+                        FirebaseDatabase.getInstance().getReference().child("rooms/" + playerName).setValue(null);
                         startActivity(new Intent(getApplicationContext(), MainActivity2.class));
                         MainActivity3.this.finish();
                         Toast.makeText(MainActivity3.this, "YOU LOST !", Toast.LENGTH_SHORT).show();
