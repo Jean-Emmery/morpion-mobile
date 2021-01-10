@@ -63,13 +63,13 @@
 
     <EditText
         android:id="@+id/editTextTextPersonName6"
-        android:layout_width="120dp"
+        android:layout_width="170dp"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:clickable="false"
-        android:focusable="false"
         android:editable="false"
         android:ems="10"
+        android:focusable="false"
         android:inputType="none"
         android:shadowColor="@color/white"
         android:text="VERSUS"

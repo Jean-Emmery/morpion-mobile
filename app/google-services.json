@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:1012796429000:android:bcbd2b9e12a2702bcacbfd",
         "android_client_info": {
-          "package_name": "com.example.multimorpion"
+          "package_name": "com.game.multimorpion"
         }
       },
       "oauth_client": [

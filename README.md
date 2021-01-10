@@ -1,4 +1,4 @@
-# morpion-mobile<<<<<<< HEAD
+# morpion-mobile
 
 
 AJOUT:
@@ -6,9 +6,7 @@ Creation de joueur via firebase
 Creation de salles via firebase
 Attribution joueur/salle
 Systeme de tour a tour
-2/01/21 : multi fonctionel
 
-RESTE
+RESTE:
+Intégrer la logique du jeu
 Merger le code
-améliorer UI
-améliorer UX

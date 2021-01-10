@@ -1,4 +1,4 @@
-package com.example.multimorpion;
+package com.game.multimorpion;
 
 import org.junit.Test;
 
